@@ -5,17 +5,13 @@
 
 set -euo pipefail
 
-echo "-:::- SYSTEM INFO -:::-"
-echo "HOST: $(hostname)"
-echo "UPTIME: $(uptime -p)"
-echo
-
-echo "-:::- DISK USAGE -:::-"
-df -h --output=target,size,used,avail,pcent | grep -E '^/|Mounted'
-echo
-
-echo "-:::- MEMORY USAGE -:::-"
-free -h
+echo "-:::- SYSTEM HEALTH REPORT -:::-"
+echo "> HOST: $(hostname)"
+echo "> UPTIME: $(uptime -p)"
+echo "> CPU LOAD: $(uptime | awk -F'load average:' '{print $2}')"
+echo "> MEMORY USAGE: $(free -h | awk 'NR==2 {print $3 "/" $2}')"
+echo "> DISK USAGE: $(df -h / | awk 'NR==2 {print $5}')"
+echo "> NETWORK STATUS: $(ping -c 1 8.8.8.8 &>/dev/null && echo "Connected" || echo "No connection")"
 echo
 
 echo "-:::- TOP 5 PROCESSES BY CPU -:::-"
